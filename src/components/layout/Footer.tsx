@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
-import { Shield, Mail, MessageCircle, Send, Camera, Instagram } from 'lucide-react';
+import { Mail, MessageCircle, Send, Camera, Instagram, MapPin } from 'lucide-react';
 import { CONTACT_INFO } from '@/lib/constants';
+import logo from '@/assets/logo.png';
 
 export function Footer() {
   return (
@@ -10,17 +11,19 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-4">
             <Link to="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center">
-                <Shield className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <div>
-                <span className="font-bold text-lg text-foreground">GigDrivers</span>
-                <span className="font-bold text-lg gradient-text">Support</span>
-              </div>
+              <img 
+                src={logo} 
+                alt="Gig Drivers Support Official" 
+                className="h-14 w-auto object-contain"
+              />
             </Link>
             <p className="text-sm text-muted-foreground">
               Professional account support for gig economy drivers. We help you get back on the road faster.
             </p>
+            <div className="flex items-center gap-2 text-sm">
+              <MapPin className="w-4 h-4 text-primary" />
+              <span className="text-muted-foreground">Los Angeles, California</span>
+            </div>
             <div className="flex items-center gap-2 text-sm">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
               <span className="text-muted-foreground">24/7 Support Available</span>
