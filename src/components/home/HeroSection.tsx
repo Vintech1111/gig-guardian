@@ -1,15 +1,33 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Shield, Clock, CheckCircle } from 'lucide-react';
 import heroBg from '@/assets/hero-bg.jpg';
 
 export function HeroSection() {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const parallaxOffset = scrollY * 0.5;
+  const opacityFade = Math.max(0, 1 - scrollY / 600);
+
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden">
-      {/* Hero Background Image */}
+      {/* Hero Background Image with Parallax */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${heroBg})` }}
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat will-change-transform"
+        style={{ 
+          backgroundImage: `url(${heroBg})`,
+          transform: `translateY(${parallaxOffset}px) scale(${1 + scrollY * 0.0005})`,
+        }}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/60" />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/50" />
@@ -17,10 +35,16 @@ export function HeroSection() {
 
       {/* Animated Background Effects */}
       <div className="absolute inset-0 cyber-grid opacity-10" />
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse-glow" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-glow-secondary/10 rounded-full blur-[120px] animate-pulse-glow" style={{ animationDelay: '1s' }} />
+      <div 
+        className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[120px] animate-pulse-glow"
+        style={{ transform: `translateY(${parallaxOffset * 0.3}px)` }}
+      />
+      <div 
+        className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-glow-secondary/10 rounded-full blur-[120px] animate-pulse-glow"
+        style={{ transform: `translateY(${parallaxOffset * 0.2}px)`, animationDelay: '1s' }}
+      />
       
-      {/* Floating Particles */}
+      {/* Floating Particles with Parallax */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(20)].map((_, i) => (
           <div
@@ -31,12 +55,16 @@ export function HeroSection() {
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 5}s`,
               animationDuration: `${5 + Math.random() * 5}s`,
+              transform: `translateY(${parallaxOffset * (0.1 + Math.random() * 0.3)}px)`,
             }}
           />
         ))}
       </div>
       
-      <div className="container mx-auto px-4 relative z-10">
+      <div 
+        className="container mx-auto px-4 relative z-10 transition-opacity duration-300"
+        style={{ opacity: opacityFade }}
+      >
         <div className="max-w-4xl mx-auto text-center space-y-8">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass border-primary/30 animate-fade-in-up hover:glow-primary-sm transition-all duration-300">
@@ -92,7 +120,10 @@ export function HeroSection() {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+      <div 
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce transition-opacity duration-300"
+        style={{ opacity: opacityFade }}
+      >
         <div className="w-6 h-10 rounded-full border-2 border-muted-foreground/50 flex items-start justify-center p-2">
           <div className="w-1.5 h-3 rounded-full bg-primary animate-pulse" />
         </div>
