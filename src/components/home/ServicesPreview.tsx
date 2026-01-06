@@ -3,14 +3,24 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { Button } from '@/components/ui/button';
 import { SERVICES } from '@/lib/constants';
 import { ArrowRight } from 'lucide-react';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 export function ServicesPreview() {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
+  const { ref: cardsRef, isVisible: cardsVisible } = useScrollAnimation({ threshold: 0.05 });
+  const { ref: ctaRef, isVisible: ctaVisible } = useScrollAnimation();
+
   return (
     <section className="py-20 relative">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-secondary/30 to-transparent" />
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-12">
+        <div 
+          ref={headerRef}
+          className={`text-center mb-12 transition-all duration-700 ${
+            headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">
             Our <span className="gradient-text">Services</span>
           </h2>
@@ -19,13 +29,20 @@ export function ServicesPreview() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div 
+          ref={cardsRef}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
           {SERVICES.map((service, index) => (
             <Card
               key={service.id}
               variant="service"
-              className="animate-fade-in-up"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className={`transition-all duration-700 ${
+                cardsVisible 
+                  ? 'opacity-100 translate-y-0' 
+                  : 'opacity-0 translate-y-10'
+              }`}
+              style={{ transitionDelay: cardsVisible ? `${index * 100}ms` : '0ms' }}
             >
               <CardHeader>
                 <div className="w-12 h-12 rounded-lg bg-secondary flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform">
@@ -52,7 +69,12 @@ export function ServicesPreview() {
           ))}
         </div>
 
-        <div className="text-center mt-12">
+        <div 
+          ref={ctaRef}
+          className={`text-center mt-12 transition-all duration-700 delay-300 ${
+            ctaVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
           <Link to="/services">
             <Button variant="glow" size="lg">
               View All Services

@@ -1,14 +1,23 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { TESTIMONIALS } from '@/lib/constants';
 import { Star } from 'lucide-react';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 export function TestimonialsSection() {
+  const { ref: headerRef, isVisible: headerVisible } = useScrollAnimation();
+  const { ref: cardsRef, isVisible: cardsVisible } = useScrollAnimation({ threshold: 0.05 });
+
   return (
     <section className="py-20 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent" />
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-12">
+        <div 
+          ref={headerRef}
+          className={`text-center mb-12 transition-all duration-700 ${
+            headerVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">
             What Our <span className="gradient-text">Clients Say</span>
           </h2>
@@ -17,13 +26,20 @@ export function TestimonialsSection() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div 
+          ref={cardsRef}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
           {TESTIMONIALS.map((testimonial, index) => (
             <Card
               key={testimonial.id}
               variant="glass"
-              className="animate-fade-in-up"
-              style={{ animationDelay: `${index * 0.1}s` }}
+              className={`transition-all duration-700 ${
+                cardsVisible 
+                  ? 'opacity-100 translate-y-0' 
+                  : 'opacity-0 translate-y-10'
+              }`}
+              style={{ transitionDelay: cardsVisible ? `${index * 100}ms` : '0ms' }}
             >
               <CardContent className="p-6 space-y-4">
                 {/* Stars */}
