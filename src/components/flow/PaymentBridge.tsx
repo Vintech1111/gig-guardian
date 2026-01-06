@@ -1,7 +1,7 @@
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useFlow } from '@/contexts/FlowContext';
-import { PLATFORMS, SERVICES, PRICING_TIERS, CONTACT_INFO } from '@/lib/constants';
+import { PLATFORMS, SERVICES, CONTACT_INFO } from '@/lib/constants';
 import { MessageCircle, ArrowLeft, Shield, CheckCircle } from 'lucide-react';
 
 export function PaymentBridge() {
@@ -9,7 +9,6 @@ export function PaymentBridge() {
 
   const selectedPlatform = PLATFORMS.find((p) => p.id === state.selectedPlatform);
   const selectedService = SERVICES.find((s) => s.id === state.selectedService);
-  const selectedTier = PRICING_TIERS.find((t) => t.id === state.selectedTier);
 
   const whatsappMessage = encodeURIComponent(
     `Hello, I would like to proceed with payment.
@@ -17,7 +16,7 @@ export function PaymentBridge() {
 Email: ${state.userDetails?.email}
 Platform: ${selectedPlatform?.name}
 Service: ${selectedService?.name}
-Tier: $${selectedTier?.price}
+Amount: $${selectedService?.price}
 
 Please provide payment instructions.`
   );
@@ -64,13 +63,9 @@ Please provide payment instructions.`
               <p className="text-sm text-muted-foreground">Service</p>
               <p className="font-medium">{selectedService?.name}</p>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Plan</p>
-              <p className="font-medium">{selectedTier?.name}</p>
-            </div>
-            <div>
+            <div className="col-span-2">
               <p className="text-sm text-muted-foreground">Amount</p>
-              <p className="font-bold text-xl gradient-text">${selectedTier?.price}</p>
+              <p className="font-bold text-2xl gradient-text">${selectedService?.price}</p>
             </div>
           </div>
         </CardContent>
@@ -114,11 +109,11 @@ Please provide payment instructions.`
       <div className="flex justify-center">
         <Button
           variant="ghost"
-          onClick={() => setCurrentStep(4)}
+          onClick={() => setCurrentStep(3)}
           className="gap-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Pricing
+          Back
         </Button>
       </div>
     </div>

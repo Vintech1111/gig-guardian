@@ -9,7 +9,6 @@ const stepLabels = [
   'Platform',
   'Service',
   'Details',
-  'Pricing',
   'Payment',
 ];
 

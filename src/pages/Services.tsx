@@ -5,7 +5,6 @@ import { PlatformSelection } from '@/components/flow/PlatformSelection';
 import { ServiceSelection } from '@/components/flow/ServiceSelection';
 import { UserDetailsForm } from '@/components/flow/UserDetailsForm';
 import { ProcessingAnimation } from '@/components/flow/ProcessingAnimation';
-import { PricingSelection } from '@/components/flow/PricingSelection';
 import { PaymentBridge } from '@/components/flow/PaymentBridge';
 import { useFlow } from '@/contexts/FlowContext';
 
@@ -31,8 +30,6 @@ const Services = () => {
       case 3:
         return <UserDetailsForm onSubmit={handleFormSubmit} />;
       case 4:
-        return <PricingSelection />;
-      case 5:
         return <PaymentBridge />;
       default:
         return <PlatformSelection />;
@@ -47,7 +44,7 @@ const Services = () => {
     <Layout>
       <div className="min-h-screen py-12">
         <div className="container mx-auto px-4">
-          <StepIndicator currentStep={state.currentStep} totalSteps={5} />
+          <StepIndicator currentStep={state.currentStep} totalSteps={4} />
           <div className="mt-8">{renderStep()}</div>
         </div>
       </div>
