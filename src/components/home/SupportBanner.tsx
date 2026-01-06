@@ -1,13 +1,21 @@
 import { Button } from '@/components/ui/button';
 import { MessageCircle, Mail, Headphones } from 'lucide-react';
 import { CONTACT_INFO } from '@/lib/constants';
+import { useScrollAnimation } from '@/hooks/useScrollAnimation';
 
 export function SupportBanner() {
+  const { ref, isVisible } = useScrollAnimation();
+
   return (
     <section className="py-16 relative">
       <div className="absolute inset-0 gradient-primary opacity-10" />
       
-      <div className="container mx-auto px-4 relative z-10">
+      <div 
+        ref={ref}
+        className={`container mx-auto px-4 relative z-10 transition-all duration-700 ${
+          isVisible ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-10 scale-95'
+        }`}
+      >
         <div className="glass rounded-2xl p-8 md:p-12 text-center space-y-6">
           <div className="flex justify-center">
             <div className="w-16 h-16 rounded-full gradient-primary flex items-center justify-center glow-primary">
