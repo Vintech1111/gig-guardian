@@ -17,75 +17,35 @@ export const SERVICES = [
     name: 'Activation of New Account',
     description: 'Get your new account activated and ready to start earning within 24-48 hours.',
     icon: '🔓',
+    price: 500,
   },
   {
     id: 'reactivation',
     name: 'Reactivation',
     description: 'Restore your deactivated account and get back on the road quickly.',
     icon: '🔄',
+    price: 800,
   },
   {
     id: 'waitlist',
     name: 'Waitlist Authorization',
     description: 'Skip the waitlist and get authorized to start working immediately.',
     icon: '⏭️',
+    price: 500,
   },
   {
     id: 'zone-change',
     name: 'Change of Zone',
     description: 'Transfer your account to a new delivery zone of your choice.',
     icon: '📍',
+    price: 300,
   },
   {
     id: 'bot-grabber',
     name: 'Bot Grabber Installation',
     description: 'Install our premium bot grabber to secure more orders automatically.',
     icon: '🤖',
-  },
-] as const;
-
-export const PRICING_TIERS = [
-  {
-    id: 'tier-1',
-    name: 'Basic',
-    price: 350,
-    description: 'Single-use authorization',
-    features: [
-      'One account activation',
-      'Basic authorization',
-      'Email support',
-      '24-48 hour processing',
-    ],
-    popular: false,
-  },
-  {
-    id: 'tier-2',
-    name: 'Professional',
-    price: 500,
-    description: 'Best value for most drivers',
-    features: [
-      'Two account uses',
-      'Faster processing',
-      'Priority support',
-      '12-24 hour processing',
-      'Free zone change',
-    ],
-    popular: true,
-  },
-  {
-    id: 'tier-3',
-    name: 'Enterprise',
-    price: 1000,
-    description: 'Universal multi-platform access',
-    features: [
-      'Universal code',
-      'Multi-platform support',
-      'Extended usage period',
-      'VIP support',
-      'Instant processing',
-      'Dedicated account manager',
-    ],
-    popular: false,
+    price: 1500,
   },
 ] as const;
 

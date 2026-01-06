@@ -12,7 +12,6 @@ interface FlowState {
   selectedPlatform: string | null;
   selectedService: string | null;
   userDetails: UserDetails | null;
-  selectedTier: string | null;
 }
 
 interface FlowContextType {
@@ -21,7 +20,6 @@ interface FlowContextType {
   selectPlatform: (platformId: string) => void;
   selectService: (serviceId: string) => void;
   setUserDetails: (details: UserDetails) => void;
-  selectTier: (tierId: string) => void;
   resetFlow: () => void;
 }
 
@@ -30,7 +28,6 @@ const initialState: FlowState = {
   selectedPlatform: null,
   selectedService: null,
   userDetails: null,
-  selectedTier: null,
 };
 
 const FlowContext = createContext<FlowContextType | undefined>(undefined);
@@ -54,10 +51,6 @@ export function FlowProvider({ children }: { children: ReactNode }) {
     setState(prev => ({ ...prev, userDetails: details }));
   };
 
-  const selectTier = (tierId: string) => {
-    setState(prev => ({ ...prev, selectedTier: tierId, currentStep: 5 }));
-  };
-
   const resetFlow = () => {
     setState(initialState);
   };
@@ -70,7 +63,6 @@ export function FlowProvider({ children }: { children: ReactNode }) {
         selectPlatform,
         selectService,
         setUserDetails,
-        selectTier,
         resetFlow,
       }}
     >
