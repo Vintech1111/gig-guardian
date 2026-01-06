@@ -7,12 +7,22 @@ import { SupportBanner } from '@/components/home/SupportBanner';
 
 const Index = () => {
   return (
-    <Layout>
-      <HeroSection />
-      <ServicesPreview />
-      <PlatformsSection />
-      <TestimonialsSection />
-      <SupportBanner />
+    <Layout enableSnapScroll>
+      <div className="snap-section">
+        <HeroSection />
+      </div>
+      <div className="snap-section">
+        <ServicesPreview />
+      </div>
+      <div className="snap-section">
+        <PlatformsSection />
+      </div>
+      <div className="snap-section">
+        <TestimonialsSection />
+      </div>
+      <div className="snap-section">
+        <SupportBanner />
+      </div>
     </Layout>
   );
 };
