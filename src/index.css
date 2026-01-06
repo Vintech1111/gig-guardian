@@ -81,6 +81,10 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground font-sans antialiased;
     font-family: 'Inter', sans-serif;
@@ -88,6 +92,18 @@
 
   code, .font-mono {
     font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Snap scroll container */
+  .snap-container {
+    scroll-snap-type: y proximity;
+    overflow-y: auto;
+    height: 100vh;
+  }
+
+  .snap-section {
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
   }
 }
 
