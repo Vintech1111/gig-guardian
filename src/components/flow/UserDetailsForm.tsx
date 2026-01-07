@@ -6,7 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useFlow } from '@/contexts/FlowContext';
 import { PLATFORMS, SERVICES } from '@/lib/constants';
-import { ArrowLeft, Shield } from 'lucide-react';
+import { ArrowLeft, Shield, Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface UserDetailsFormProps {
   onSubmit: () => void;
@@ -21,6 +23,7 @@ export function UserDetailsForm({ onSubmit }: UserDetailsFormProps) {
     location: '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const selectedPlatform = PLATFORMS.find((p) => p.id === state.selectedPlatform);
   const selectedService = SERVICES.find((s) => s.id === state.selectedService);
@@ -50,12 +53,36 @@ export function UserDetailsForm({ onSubmit }: UserDetailsFormProps) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (validateForm()) {
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+
+    try {
+      // Create case via edge function
+      const { data, error } = await supabase.functions.invoke('create-case', {
+        body: {
+          email: formData.email,
+          name: formData.fullName,
+          phone: formData.accountDetails,
+          platform: selectedPlatform?.name || '',
+          service: selectedService?.name || '',
+          tier: `$${selectedService?.price || 0}`,
+        }
+      });
+
+      if (error) throw error;
+
       setUserDetails(formData);
+      toast.success('Case created! Check your email for the dashboard link.');
       onSubmit();
+    } catch (error: any) {
+      console.error('Error creating case:', error);
+      toast.error('Failed to submit request. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -157,8 +184,15 @@ export function UserDetailsForm({ onSubmit }: UserDetailsFormProps) {
               )}
             </div>
 
-            <Button type="submit" variant="hero" size="lg" className="w-full">
-              Approve Request
+            <Button type="submit" variant="hero" size="lg" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                'Submit Request'
+              )}
             </Button>
           </form>
         </CardContent>

@@ -14,7 +14,60 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      cases: {
+        Row: {
+          admin_whatsapp_number: string | null
+          authorization_code: string | null
+          code_verified: boolean | null
+          created_at: string
+          email: string
+          id: string
+          name: string
+          payment_proof_url: string | null
+          phone: string | null
+          platform: string
+          service: string
+          status: string
+          tier: string
+          token: string
+          updated_at: string
+        }
+        Insert: {
+          admin_whatsapp_number?: string | null
+          authorization_code?: string | null
+          code_verified?: boolean | null
+          created_at?: string
+          email: string
+          id?: string
+          name: string
+          payment_proof_url?: string | null
+          phone?: string | null
+          platform: string
+          service: string
+          status?: string
+          tier: string
+          token: string
+          updated_at?: string
+        }
+        Update: {
+          admin_whatsapp_number?: string | null
+          authorization_code?: string | null
+          code_verified?: boolean | null
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          payment_proof_url?: string | null
+          phone?: string | null
+          platform?: string
+          service?: string
+          status?: string
+          tier?: string
+          token?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
