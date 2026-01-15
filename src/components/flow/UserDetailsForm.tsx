@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useFlow } from '@/contexts/FlowContext';
 import { PLATFORMS, SERVICES } from '@/lib/constants';
-import { ArrowLeft, Shield, Loader2 } from 'lucide-react';
+import { ArrowLeft, Shield, Loader2, CheckCircle, Copy, ExternalLink } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -15,6 +16,7 @@ interface UserDetailsFormProps {
 }
 
 export function UserDetailsForm({ onSubmit }: UserDetailsFormProps) {
+  const navigate = useNavigate();
   const { state, setUserDetails, setCurrentStep } = useFlow();
   const [formData, setFormData] = useState({
     fullName: '',
@@ -24,6 +26,8 @@ export function UserDetailsForm({ onSubmit }: UserDetailsFormProps) {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [caseCreated, setCaseCreated] = useState(false);
+  const [dashboardUrl, setDashboardUrl] = useState('');
 
   const selectedPlatform = PLATFORMS.find((p) => p.id === state.selectedPlatform);
   const selectedService = SERVICES.find((s) => s.id === state.selectedService);
@@ -76,8 +80,9 @@ export function UserDetailsForm({ onSubmit }: UserDetailsFormProps) {
       if (error) throw error;
 
       setUserDetails(formData);
-      toast.success('Case created! Check your email for the dashboard link.');
-      onSubmit();
+      setDashboardUrl(data.dashboardUrl);
+      setCaseCreated(true);
+      toast.success('Case created successfully!');
     } catch (error: any) {
       console.error('Error creating case:', error);
       toast.error('Failed to submit request. Please try again.');
@@ -85,6 +90,72 @@ export function UserDetailsForm({ onSubmit }: UserDetailsFormProps) {
       setIsSubmitting(false);
     }
   };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(dashboardUrl);
+    toast.success('Link copied to clipboard!');
+  };
+
+  if (caseCreated) {
+    return (
+      <div className="max-w-2xl mx-auto space-y-8">
+        <div className="text-center">
+          <div className="w-20 h-20 mx-auto rounded-full bg-green-500/20 flex items-center justify-center mb-6">
+            <CheckCircle className="w-10 h-10 text-green-500" />
+          </div>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+            Case Created <span className="gradient-text">Successfully!</span>
+          </h2>
+          <p className="text-muted-foreground">
+            Your service request has been submitted. Use the link below to access your dashboard and upload payment proof.
+          </p>
+        </div>
+
+        <Card variant="glass" className="animate-fade-in-up">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Shield className="w-5 h-5 text-primary" />
+              Your Case Dashboard Link
+            </CardTitle>
+            <CardDescription>
+              Save this link to track your case status and upload payment proof
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="p-4 rounded-lg bg-secondary/50 border border-primary/30">
+              <p className="text-sm text-muted-foreground mb-2">Dashboard URL:</p>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 text-sm text-primary break-all">{dashboardUrl}</code>
+                <Button variant="outline" size="icon" onClick={copyToClipboard}>
+                  <Copy className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Button 
+                variant="hero" 
+                className="w-full" 
+                onClick={() => navigate(dashboardUrl.replace(window.location.origin, ''))}
+              >
+                <ExternalLink className="w-4 h-4 mr-2" />
+                Go to Dashboard Now
+              </Button>
+              
+              <Button variant="outline" className="w-full" onClick={copyToClipboard}>
+                <Copy className="w-4 h-4 mr-2" />
+                Copy Link for Later
+              </Button>
+            </div>
+
+            <p className="text-sm text-muted-foreground text-center">
+              💡 Tip: Bookmark this link or save it somewhere safe to access your case anytime.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">

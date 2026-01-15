@@ -1,8 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { Resend } from "https://esm.sh/resend@2.0.0";
-
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -71,69 +68,13 @@ const handler = async (req: Request): Promise<Response> => {
     const origin = req.headers.get("origin") || "https://your-app.lovable.app";
     const dashboardUrl = `${origin}/case/${token}`;
 
-    // Send email with dashboard link
-    const emailResponse = await resend.emails.send({
-      from: "Gig Driver Support <onboarding@resend.dev>",
-      to: [email],
-      subject: "Your Case Dashboard - Gig Driver Support",
-      html: `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
-            .button { display: inline-block; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; margin: 20px 0; }
-            .details { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
-            .footer { text-align: center; color: #666; font-size: 12px; margin-top: 20px; }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <div class="header">
-              <h1>🚗 Gig Driver Support</h1>
-              <p>Your Service Request Has Been Received</p>
-            </div>
-            <div class="content">
-              <h2>Hello ${name}!</h2>
-              <p>Thank you for choosing Gig Driver Support. Your service request has been received and a case has been created.</p>
-              
-              <div class="details">
-                <h3>Case Details:</h3>
-                <p><strong>Platform:</strong> ${platform}</p>
-                <p><strong>Service:</strong> ${service}</p>
-                <p><strong>Package:</strong> ${tier}</p>
-              </div>
-              
-              <p><strong>Next Step:</strong> Please access your case dashboard to upload your payment proof.</p>
-              
-              <a href="${dashboardUrl}" class="button">Access Your Dashboard</a>
-              
-              <p>Or copy this link: ${dashboardUrl}</p>
-              
-              <p>Once payment is verified, we will begin processing your request immediately.</p>
-              
-              <div class="footer">
-                <p>If you have any questions, contact us on WhatsApp or Email.</p>
-                <p>© 2024 Gig Driver Support. All rights reserved.</p>
-              </div>
-            </div>
-          </div>
-        </body>
-        </html>
-      `,
-    });
-
-    console.log("Email sent:", emailResponse);
-
     return new Response(
       JSON.stringify({ 
         success: true, 
         caseId: caseData.id,
         token: token,
-        message: "Case created and email sent successfully" 
+        dashboardUrl: dashboardUrl,
+        message: "Case created successfully" 
       }),
       {
         status: 200,
