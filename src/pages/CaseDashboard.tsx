@@ -80,6 +80,7 @@ export default function CaseDashboard() {
   const [authCode, setAuthCode] = useState('');
   const [isVerifying, setIsVerifying] = useState(false);
   const [whatsappUrl, setWhatsappUrl] = useState<string | null>(null);
+  const [generatedAuthCode, setGeneratedAuthCode] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCase = async () => {
@@ -145,8 +146,9 @@ export default function CaseDashboard() {
 
       setCaseData({ ...caseData, payment_proof_url: publicUrl, status: 'payment_uploaded' });
       setWhatsappUrl(authData.whatsappUrl);
+      setGeneratedAuthCode(authData.authCode);
       
-      toast.success('Payment proof uploaded! Check your email for the authorization code.');
+      toast.success('Payment proof uploaded! Your authorization code is shown below.');
 
       // Open WhatsApp to notify admin
       if (authData.whatsappUrl) {
@@ -310,42 +312,62 @@ export default function CaseDashboard() {
                 </Card>
               )}
 
-              {/* Authorization Code Section */}
+              {/* Authorization Code Display & Entry Section */}
               {isPaymentUploaded && !caseData.code_verified && (
                 <Card className="border-primary/50 animate-fade-in-up">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <KeyRound className="w-5 h-5 text-primary" />
-                      Enter Authorization Code
+                      Authorization Code
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-muted-foreground">
-                      We've sent an authorization code to your email. Enter it below to confirm your payment.
-                    </p>
-                    <div className="flex gap-4">
-                      <Input
-                        placeholder="Enter 6-digit code"
-                        value={authCode}
-                        onChange={(e) => setAuthCode(e.target.value.toUpperCase())}
-                        className="text-center text-xl tracking-widest font-mono uppercase"
-                        maxLength={6}
-                      />
-                      <Button 
-                        onClick={handleVerifyCode} 
-                        disabled={isVerifying || authCode.length < 6}
-                        variant="glow"
-                      >
-                        {isVerifying ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          'Verify'
-                        )}
-                      </Button>
+                  <CardContent className="space-y-6">
+                    {/* Display Generated Auth Code */}
+                    {generatedAuthCode && (
+                      <div className="p-6 rounded-lg bg-gradient-to-r from-primary/20 to-primary/10 border border-primary/30 text-center">
+                        <p className="text-sm text-muted-foreground mb-2">Your Authorization Code:</p>
+                        <div className="text-4xl font-bold tracking-[0.5em] text-primary font-mono">
+                          {generatedAuthCode}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-3">
+                          💡 Save this code! Enter it below to verify your payment.
+                        </p>
+                      </div>
+                    )}
+
+                    {!generatedAuthCode && (
+                      <p className="text-muted-foreground">
+                        Enter the authorization code shown after uploading your payment proof.
+                      </p>
+                    )}
+
+                    <div className="space-y-3">
+                      <Label>Enter Code to Verify</Label>
+                      <div className="flex gap-4">
+                        <Input
+                          placeholder="Enter 6-digit code"
+                          value={authCode}
+                          onChange={(e) => setAuthCode(e.target.value.toUpperCase())}
+                          className="text-center text-xl tracking-widest font-mono uppercase"
+                          maxLength={6}
+                        />
+                        <Button 
+                          onClick={handleVerifyCode} 
+                          disabled={isVerifying || authCode.length < 6}
+                          variant="glow"
+                        >
+                          {isVerifying ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            'Verify'
+                          )}
+                        </Button>
+                      </div>
                     </div>
+
                     {whatsappUrl && (
                       <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-                        <Button variant="outline" className="w-full mt-2">
+                        <Button variant="outline" className="w-full">
                           <ExternalLink className="w-4 h-4 mr-2" />
                           Notify Admin on WhatsApp
                         </Button>
