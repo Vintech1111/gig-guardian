@@ -1,1 +1,13 @@
 project_id = "rjeoujxhhorkrurqrcbh"
+
+[functions.create-case]
+verify_jwt = false
+
+[functions.send-auth-code]
+verify_jwt = false
+
+[functions.verify-auth-code]
+verify_jwt = false
+
+[functions.notify-admin]
+verify_jwt = false
