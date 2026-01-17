@@ -61,6 +61,38 @@ export function UserDetailsForm({ onSubmit }: UserDetailsFormProps) {
 
     try {
       setUserDetails(formData);
+
+      // Send admin notification email
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/notify-admin`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            },
+            body: JSON.stringify({
+              fullName: formData.fullName,
+              email: formData.email,
+              accountDetails: formData.accountDetails,
+              location: formData.location,
+              platform: selectedPlatform?.name || '',
+              service: selectedService?.name || '',
+              price: selectedService?.price || 0,
+            }),
+          }
+        );
+        
+        if (!response.ok) {
+          console.error('Failed to send admin notification');
+        } else {
+          console.log('Admin notification sent successfully');
+        }
+      } catch (notifyError) {
+        console.error('Error sending admin notification:', notifyError);
+      }
+
       toast.success('Request approved!');
       onSubmit();
     } catch (error: any) {
