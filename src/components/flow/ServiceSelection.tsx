@@ -45,6 +45,9 @@ export function ServiceSelection() {
               <CardTitle className="group-hover:text-primary transition-colors">
                 {service.name}
               </CardTitle>
+              <div className="text-2xl font-bold gradient-text mt-2">
+                ${service.price}
+              </div>
             </CardHeader>
             <CardContent>
               <CardDescription className="text-muted-foreground">
