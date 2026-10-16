@@ -86,7 +86,7 @@ export const TESTIMONIALS = [
 
 export const CONTACT_INFO = {
   email: 'acc.wisezero@gmail.com',
-  whatsapp: '+13093198991',
+  whatsapp: '+12344523607',
   telegram: '@gigdriversupport',
   snapchat: 'gigdriversupport',
   instagram: '@gigdriversupportofficial',
